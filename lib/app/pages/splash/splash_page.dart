@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:vakinha_burger_bloc/app/core/ui/helpers/size_extensions.dart';
-import 'package:vakinha_burger_bloc/app/core/widgets/delivery_button.dart';
+import 'package:vakinha_burger_bloc/app/core/ui/widgets/delivery_button.dart';
 
 class SplashPage extends StatelessWidget {
   const SplashPage({super.key});
@@ -31,7 +31,7 @@ class SplashPage extends StatelessWidget {
                   DeliveryButton(
                     label: 'Acessar',
                     onPressed: () {
-                      Navigator.of(context).pushNamed('/home');
+                      Navigator.of(context).popAndPushNamed('/home');
                     },
                     width: context.percentWidth(.7),
                     height: 40,
