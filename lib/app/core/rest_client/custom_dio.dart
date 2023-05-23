@@ -5,7 +5,7 @@ import 'package:vakinha_burger_bloc/app/core/config/env/env.dart';
 class CustomDio extends DioForNative {
   CustomDio()
       : super(BaseOptions(
-          baseUrl: Env.instance['backend_base_url_network'] ?? '',
+          baseUrl: Env.instance['backend_base_url'] ?? '',
           connectTimeout: const Duration(seconds: 5000),
           receiveTimeout: const Duration(seconds: 60000),
         )) {
