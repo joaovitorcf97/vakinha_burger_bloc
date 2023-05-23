@@ -37,7 +37,7 @@ class DeliveryProductTile extends StatelessWidget {
                   child: Text(
                     product.description,
                     style: context.textStyles.textLight.copyWith(
-                      fontSize: 12,
+                      fontSize: 13,
                     ),
                   ),
                 ),
