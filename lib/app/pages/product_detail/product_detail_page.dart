@@ -7,17 +7,18 @@ import 'package:vakinha_burger_bloc/app/core/ui/helpers/size_extensions.dart';
 import 'package:vakinha_burger_bloc/app/core/ui/styles/text_styles.dart';
 import 'package:vakinha_burger_bloc/app/core/ui/widgets/delivery_app_bar.dart';
 import 'package:vakinha_burger_bloc/app/core/ui/widgets/delivery_increment_decrement_button.dart';
+import 'package:vakinha_burger_bloc/app/dto/order_product_dto.dart';
 import 'package:vakinha_burger_bloc/app/models/product_model.dart';
 import 'package:vakinha_burger_bloc/app/pages/product_detail/controller/product_controller.dart';
 
-import 'controller/product_state.dart';
-
 class ProductDetailPage extends StatefulWidget {
   final ProductModel product;
+  final OrderProductDTO? orderProduct;
 
   const ProductDetailPage({
     super.key,
     required this.product,
+    this.orderProduct,
   });
 
   @override
@@ -26,6 +27,54 @@ class ProductDetailPage extends StatefulWidget {
 
 class _ProductDetailPageState
     extends BaseState<ProductDetailPage, ProductController> {
+  @override
+  void initState() {
+    super.initState();
+    final amount = widget.orderProduct?.amount ?? 1;
+
+    controller.initial(amount, widget.orderProduct != null);
+  }
+
+  void _showConfirmeDelete(int amount) {
+    showDialog(
+      barrierDismissible: false,
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text('Deseja excluir o produto?'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text(
+                'Cancelar',
+                style: context.textStyles.textBold.copyWith(
+                  color: Colors.red,
+                ),
+              ),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context);
+                Navigator.of(context).pop(
+                  OrderProductDTO(
+                    product: widget.product,
+                    amount: amount,
+                  ),
+                );
+              },
+              child: Text(
+                'Confirmar',
+                style: context.textStyles.textBold,
+              ),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -91,30 +140,54 @@ class _ProductDetailPageState
                 child: BlocBuilder<ProductController, int>(
                   builder: (context, amount) {
                     return ElevatedButton(
-                      onPressed: () {},
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            'Adicionar',
-                            style: context.textStyles.textExtraBold.copyWith(
-                              fontSize: 13,
+                      style: amount == 0
+                          ? ElevatedButton.styleFrom(
+                              backgroundColor: Colors.red,
+                            )
+                          : null,
+                      onPressed: () {
+                        if (amount == 0) {
+                          _showConfirmeDelete(amount);
+                        } else {
+                          Navigator.of(context).pop(
+                            OrderProductDTO(
+                              product: widget.product,
+                              amount: amount,
                             ),
-                          ),
-                          const SizedBox(width: 8),
-                          Expanded(
-                            child: AutoSizeText(
-                              (widget.product.price * amount).currencyPTBR,
-                              maxFontSize: 13,
-                              minFontSize: 5,
-                              maxLines: 1,
-                              textAlign: TextAlign.right,
+                          );
+                        }
+                      },
+                      child: Visibility(
+                        visible: amount > 0,
+                        replacement: Text(
+                          'Excluir produto',
+                          style: context.textStyles.textExtraBold,
+                        ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              'Adicionar',
                               style: context.textStyles.textExtraBold.copyWith(
                                 fontSize: 13,
                               ),
                             ),
-                          ),
-                        ],
+                            const SizedBox(width: 8),
+                            Expanded(
+                              child: AutoSizeText(
+                                (widget.product.price * amount).currencyPTBR,
+                                maxFontSize: 13,
+                                minFontSize: 5,
+                                maxLines: 1,
+                                textAlign: TextAlign.right,
+                                style:
+                                    context.textStyles.textExtraBold.copyWith(
+                                  fontSize: 13,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
                     );
                   },

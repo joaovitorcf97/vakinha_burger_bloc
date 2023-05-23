@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:vakinha_burger_bloc/app/core/ui/base_state/base_state.dart';
 import 'package:vakinha_burger_bloc/app/core/ui/widgets/delivery_app_bar.dart';
 import 'package:vakinha_burger_bloc/app/pages/home/widgets/delivery_product_tile.dart';
+import 'package:vakinha_burger_bloc/app/pages/home/widgets/shopping_bag_widget.dart';
 
 import 'controller/home_controller.dart';
 import 'controller/home_state.dart';
@@ -49,12 +50,20 @@ class _HomePageState extends BaseState<HomePage, HomeController> {
                 child: ListView.builder(
                   itemCount: state.products.length,
                   itemBuilder: (context, index) {
-                    final products = state.products[index];
+                    final product = state.products[index];
+                    final orders = state.shopInBag
+                        .where((order) => order.product == product);
+
                     return DeliveryProductTile(
-                      product: products,
+                      product: product,
+                      orderProduct: orders.isNotEmpty ? orders.first : null,
                     );
                   },
                 ),
+              ),
+              Visibility(
+                visible: state.shopInBag.isNotEmpty,
+                child: ShoppingBagWidget(bag: state.shopInBag),
               ),
             ],
           );
