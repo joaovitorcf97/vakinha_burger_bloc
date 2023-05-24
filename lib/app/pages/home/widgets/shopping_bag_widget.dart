@@ -13,6 +13,21 @@ class ShoppingBagWidget extends StatelessWidget {
     required this.bag,
   });
 
+  Future<void> _goOrder(BuildContext context) async {
+    final navigator = Navigator.of(context);
+    final sharedPreferences = await SharedPreferences.getInstance();
+
+    if (!sharedPreferences.containsKey('accessToken')) {
+      final loginResult = await navigator.pushNamed('/auth/login');
+
+      if (loginResult == null || loginResult == false) {
+        return;
+      }
+    }
+
+    await navigator.pushNamed('/order', arguments: bag);
+  }
+
   @override
   Widget build(BuildContext context) {
     var totalBag = bag
@@ -70,13 +85,5 @@ class ShoppingBagWidget extends StatelessWidget {
         ),
       ),
     );
-  }
-
-  Future<void> _goOrder(BuildContext context) async {
-    final navigator = Navigator.of(context);
-    final sharedPreferences = await SharedPreferences.getInstance();
-    if (!sharedPreferences.containsKey('accessToken')) {
-      final loginResult = await navigator.pushNamed('/auth/login');
-    }
   }
 }
