@@ -12,6 +12,10 @@ enum OrderStatus {
   loading,
   loaded,
   error,
+  updateOrder,
+  confirmRemoveProduct,
+  emptyBag,
+  success
 }
 
 class OrderState extends Equatable {
@@ -33,6 +37,11 @@ class OrderState extends Equatable {
         paymentTypes = const [],
         errorMessage = null;
 
+  double get totalOrder => orderProducts.fold(
+        0.0,
+        (previousValue, element) => previousValue + element.totalAmount,
+      );
+
   @override
   List<Object?> get props =>
       [status, orderProducts, paymentTypes, errorMessage];
@@ -50,4 +59,18 @@ class OrderState extends Equatable {
       errorMessage: errorMessage ?? this.errorMessage,
     );
   }
+}
+
+class OrderConfirmDeleteProductState extends OrderState {
+  final OrderProductDTO orderProduct;
+  final int index;
+
+  const OrderConfirmDeleteProductState({
+    required this.orderProduct,
+    required this.index,
+    required super.status,
+    required super.orderProducts,
+    required super.paymentTypes,
+    super.errorMessage,
+  });
 }

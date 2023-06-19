@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:vakinha_burger_bloc/app/core/global/global_context.dart';
 
 class AuthInterceptor extends Interceptor {
   @override
@@ -21,10 +22,7 @@ class AuthInterceptor extends Interceptor {
     super.onError(err, handler);
 
     if (err.response?.statusCode == 401) {
-      // tela de login
-      final sp = await SharedPreferences.getInstance();
-      final accessToken = sp.clear();
-      handler.next(err);
+      GlobalContext.instance.loginExpire();
     } else {
       handler.next(err);
     }

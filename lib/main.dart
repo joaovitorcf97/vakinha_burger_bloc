@@ -5,5 +5,5 @@ import 'package:vakinha_burger_bloc/app/delivery_app.dart';
 void main() async {
   await Env.instance.load();
 
-  runApp(const DeliveryApp());
+  runApp(DeliveryApp());
 }

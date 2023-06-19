@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:vakinha_burger_bloc/app/core/extensions/formatter_extensions.dart';
 import 'package:vakinha_burger_bloc/app/core/ui/styles/colors_app.dart';
 import 'package:vakinha_burger_bloc/app/core/ui/styles/text_styles.dart';
 import 'package:vakinha_burger_bloc/app/core/ui/widgets/delivery_increment_decrement_button.dart';
 import 'package:vakinha_burger_bloc/app/dto/order_product_dto.dart';
+import 'package:vakinha_burger_bloc/app/pages/order/controllers/order_controller.dart';
 
 class OrderProductTile extends StatelessWidget {
   final int index;
@@ -51,8 +53,16 @@ class OrderProductTile extends StatelessWidget {
                       ),
                       DeliveryIncrementDecrementButton.compact(
                         amount: orderProduct.amount,
-                        incrementTap: () {},
-                        decrementTap: () {},
+                        incrementTap: () {
+                          context
+                              .read<OrderController>()
+                              .incrementProduct(index);
+                        },
+                        decrementTap: () {
+                          context
+                              .read<OrderController>()
+                              .decrementProduct(index);
+                        },
                       ),
                     ],
                   )
