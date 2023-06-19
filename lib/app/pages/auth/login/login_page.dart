@@ -79,6 +79,7 @@ class _LoginPageState extends BaseState<LoginPage, LoginController> {
                         controller: _passwordEC,
                         decoration: const InputDecoration(labelText: 'Senha'),
                         validator: Validatorless.required('Senha obrigaória'),
+                        obscureText: true,
                       ),
                       const SizedBox(height: 30),
                       Center(

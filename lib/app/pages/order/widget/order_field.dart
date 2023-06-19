@@ -37,6 +37,8 @@ class OrderField extends StatelessWidget {
           ),
           const SizedBox(height: 16),
           TextFormField(
+            controller: controller,
+            validator: validator,
             decoration: InputDecoration(
               hintText: hintText,
               border: defaultBorder,
